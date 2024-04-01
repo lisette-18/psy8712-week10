@@ -2,7 +2,7 @@
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 library(haven)
 library(tidyverse)
-library(caret) 
+library(caret)
 set.seed(22) #for reproducibility and to ensure the analysis gets the same numbers each time
 
 #Data Import and Cleaning
@@ -88,7 +88,6 @@ eb_model <- train(
   na.action = na.pass, #used so the model will run
   trControl = myControl) #used based on datacamp suggestions
 
-#Publication
 ols_predict <- predict(ols_model, test_gss, na.action = na.pass) #we use the predict() function to make predictions from the new data and we predict on the test set that we did not use to train the model
 en_predict <- predict(en_model, test_gss, na.action = na.pass) #we use the predict() function to make predictions from the new data and we predict on the test set that we did not use to train the model
 rf_predict <- predict(rf_model, test_gss, na.action = na.pass) #we use the predict() function to make predictions from the new data and we predict on the test set that we did not use to train the model
@@ -99,16 +98,17 @@ ho_en <- cor(en_predict, test_gss$`work hours`)^2 #we use this test to calculate
 ho_rf <- cor(rf_predict, test_gss$`work hours`)^2 #we use this test to calculate the r-squared values for each model
 ho_eb <- cor(eb_predict, test_gss$`work hours`)^2 #we use this test to calculate the r-squared values for each model
 
+#Publication
 table1_tbl <-
   tibble(algo = c("OLS regression", "Elastic Net", "Random Forest", "eXtreme Gradient Boosting"),
          cv_rsq = c(sub("^0", "",formatC(ols_model$results$Rsquared[1], format = 'f', digits = 2)), #using the R2 from the ols model while including the sub function to take out the leading zeros and only have the output to the hundreths place
-                    sub("^0", "",formatC(en_model$results$Rsquared[1], format = 'f', digits = 2)), #using the R2 from the ols model while including the sub function to take out the leading zeros and only have the output to the hundreths place
-                    sub("^0", "",formatC(rf_model$results$Rsquared[1], format = 'f', digits = 2)), #using the R2 from the ols model while including the sub function to take out the leading zeros and only have the output to the hundreths place
-                    sub("^0", "",formatC(eb_model$results$Rsquared[1], format = 'f', digits = 2))), #using the R2 from the ols model while including the sub function to take out the leading zeros and only have the output to the hundreths place
+                    sub("^0", "",formatC(en_model$results$Rsquared[1], format = 'f', digits = 2)), #using the R2 from the elastic net model while including the sub function to take out the leading zeros and only have the output to the hundreths place
+                    sub("^0", "",formatC(rf_model$results$Rsquared[1], format = 'f', digits = 2)), #using the R2 from the random forest model while including the sub function to take out the leading zeros and only have the output to the hundreths place
+                    sub("^0", "",formatC(eb_model$results$Rsquared[1], format = 'f', digits = 2))), #using the R2 from the extreme gradient boosting model while including the sub function to take out the leading zeros and only have the output to the hundreths place
          ho_rsq = c(sub("^0", "",formatC(ho_ols, format = 'f', digits = 2)), #using the R2 from the ols model while including the sub function to take out the leading zeros and only have the output to the hundreths place
-                    sub("^0", "",formatC(ho_en, format = 'f', digits = 2)), #using the R2 from the ols model while including the sub function to take out the leading zeros and only have the output to the hundreths place
-                    sub("^0", "",formatC(ho_rf, format = 'f', digits = 2)), #using the R2 from the ols model while including the sub function to take out the leading zeros and only have the output to the hundreths place
-                    sub("^0", "",formatC(ho_eb, format = 'f', digits = 2)))) #using the R2 from the ols model while including the sub function to take out the leading zeros and only have the output to the hundreths place
+                    sub("^0", "",formatC(ho_en, format = 'f', digits = 2)), #using the R2 from the elastic net model while including the sub function to take out the leading zeros and only have the output to the hundreths place
+                    sub("^0", "",formatC(ho_rf, format = 'f', digits = 2)), #using the R2 from the random forest model while including the sub function to take out the leading zeros and only have the output to the hundreths place
+                    sub("^0", "",formatC(ho_eb, format = 'f', digits = 2)))) #using the R2 from the extreme gradient boosting model while including the sub function to take out the leading zeros and only have the output to the hundreths place
 
 print(table1_tbl) #print the table to review the results of the tibble i created
 
