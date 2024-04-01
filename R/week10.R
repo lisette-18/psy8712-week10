@@ -88,3 +88,26 @@ eb_model <- train(
   na.action = na.pass,
   trControl = myControl)
 
+#Publication
+ols_predict <- predict(ols_model, test_gss, na.action = na.pass)
+en_predict <- predict(en_model, test_gss, na.action = na.pass)
+rf_predict <- predict(rf_model, test_gss, na.action = na.pass)
+eb_predict <- predict(eb_model, test_gss, na.action = na.pass)
+
+ho_ols <- cor(ols_predict, test_gss$`work hours`)^2
+ho_en <- cor(en_predict, test_gss$`work hours`)^2
+ho_rf <- cor(rf_predict, test_gss$`work hours`)^2
+ho_eb <- cor(eb_predict, test_gss$`work hours`)^2
+
+table1_tbl <-
+  tibble(algo = c("OLS regression", "Elastic Net", "Random Forest", "eXtreme Gradient Boosting"),
+         cv_rsq = c(sub("^0", "",formatC(ols_model$results$Rsquared[1], format = 'f', digits = 2)), 
+                    sub("^0", "",formatC(en_model$results$Rsquared[1], format = 'f', digits = 2)),
+                    sub("^0", "",formatC(rf_model$results$Rsquared[1], format = 'f', digits = 2)),
+                    sub("^0", "",formatC(eb_model$results$Rsquared[1], format = 'f', digits = 2))),
+         ho_rsq = c(sub("^0", "",formatC(ho_ols, format = 'f', digits = 2)), 
+                    sub("^0", "",formatC(ho_en, format = 'f', digits = 2)),
+                    sub("^0", "",formatC(ho_rf, format = 'f', digits = 2)),
+                    sub("^0", "",formatC(ho_eb, format = 'f', digits = 2))))
+
+print(table1_tbl)
