@@ -111,3 +111,8 @@ table1_tbl <-
                     sub("^0", "",formatC(ho_eb, format = 'f', digits = 2))))
 
 print(table1_tbl)
+
+#Answers
+##Q1: The results changed between models as the final model 10-fold CV R2 got larger with the biggest R2 in the eXtreme Gradient Boosting. This may be because there was greater hyperparameter tuning, model complexity, and explaining the variance better.
+##Q2: The results showed variation with the hold out CV having lower R2 compared to the k-hold CV. This may be because of the iterations and the conservativeness of the models (but honestly im not quite sure)
+##Q3: I think that the eXtreme Gradient Boosting would be good for real life prediction problem because it demonstrated high R2 values, can handle linearity, and can be optimized well with more hyperparameter tuning. However, it require a lot of computational resources, needs greater time to run, and quite complex.
